@@ -59,18 +59,18 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
     // Start is called before the first frame update
     void Start() {
         NovelCanvasGroup.alpha = 0;
-        currentSave = GameManager.instance.SaveManager.GetLoaded();
+        currentSave = NovelManager.instance.SaveManager.GetLoaded();
         if (currentSave != null) {
             //TODO use scene name to get text asset
             //DialogueFileName = currentSave.sceneName;
             choices = currentSave.choices.ToList();
         }
-        GameManager.instance.EventManager.Pause.AddListener(() => { paused = true; tweenSequence?.Pause(); timeScale = 0.0f; });
-        GameManager.instance.EventManager.Unpause.AddListener(() => { paused = false; tweenSequence?.TogglePause(); timeScale = 1.0f; });
+        NovelManager.instance.EventManager.Pause.AddListener(() => { paused = true; tweenSequence?.Pause(); timeScale = 0.0f; });
+        NovelManager.instance.EventManager.Unpause.AddListener(() => { paused = false; tweenSequence?.TogglePause(); timeScale = 1.0f; });
 
 
         // LoadDialogue(DebugDialogueTextAsset);
-        dialogue = GameManager.instance.NextScene;
+        dialogue = NovelManager.instance.NextScene;
         // Debug
         if (dialogue == null) {
             dialogue = debugDialogue;
@@ -428,13 +428,13 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
                     Reset();
                     // Next Scene
                     if (nextContainer) {
-                        GameManager.instance.EventManager.EndNovelScene.Invoke();
-                        GameManager.instance.LoadScene(nextContainer);
+                        NovelManager.instance.EventManager.EndNovelScene.Invoke();
+                        NovelManager.instance.LoadScene(nextContainer);
                     } else {
                         NovelCanvasGroup.DOFade(0, 0.2f).onComplete = () => {
                             NovelCanvasGroup.interactable = false;
                             NovelCanvasGroup.blocksRaycasts = false;
-                            GameManager.instance.EventManager.EndNovelScene.Invoke();
+                            NovelManager.instance.EventManager.EndNovelScene.Invoke();
                         };
                     }
                 };

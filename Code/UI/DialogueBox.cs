@@ -90,41 +90,41 @@ public class DialogueBox : MonoBehaviour {
             if (currentSpeaker == "") {
                 //character from narrator
                 nameTween = namePlates[currentPlate].ShowPlate(speakerName).OnComplete(() => {
-                    if (!GameManager.instance.DialogueManager.MoveOn) {
+                    if (!NovelManager.instance.DialogueManager.MoveOn) {
                         currentCharacter = 0;
                     }
                     timer = 0;
-                    GameManager.instance.DialogueManager.Active = true;
+                    NovelManager.instance.DialogueManager.Active = true;
                 });
                 IteratePlateCount();
             } else {
                 nameTween = namePlates[currentPlate].ShowPlate(speakerName).OnComplete(() => {
-                    if (!GameManager.instance.DialogueManager.MoveOn) {
+                    if (!NovelManager.instance.DialogueManager.MoveOn) {
                         currentCharacter = 0;
                     }
                     timer = 0;
-                    GameManager.instance.DialogueManager.Active = true;
+                    NovelManager.instance.DialogueManager.Active = true;
                 });
                 IteratePlateCount();
             }
         } else if (newLine.SpeakingCharacterId == "") {
             //narrator, move nameplate underneath text box
             nameTween = namePlates[0].HidePlate().OnComplete(() => {
-                if (!GameManager.instance.DialogueManager.MoveOn) {
+                if (!NovelManager.instance.DialogueManager.MoveOn) {
                     currentCharacter = 0;
                 }
                 timer = 0;
-                GameManager.instance.DialogueManager.Active = true;
+                NovelManager.instance.DialogueManager.Active = true;
             });
             for (int i = 1; i < namePlates.Length; i++) {
                 namePlates[i].HidePlate();
             }
         } else {
-            if (!GameManager.instance.DialogueManager.MoveOn) {
+            if (!NovelManager.instance.DialogueManager.MoveOn) {
                 currentCharacter = 0;
             }
             timer = 0;
-            GameManager.instance.DialogueManager.Active = true;
+            NovelManager.instance.DialogueManager.Active = true;
         }
         currentLine = newLine;
         typewriter.ShowText(currentLine.DialogueText);

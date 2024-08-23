@@ -24,7 +24,7 @@ public class SceneSelectMenu : MonoBehaviour
             Button button = GameObject.Instantiate(SceneSelectPrefab, ButtonGrid.transform);
             button.GetComponentInChildren<Text>().text = name;
             button.onClick.AddListener(delegate {
-                GameManager.instance.LoadScene(dialogues[button.transform.GetSiblingIndex()]);
+                NovelManager.instance.LoadScene(dialogues[button.transform.GetSiblingIndex()]);
             });
         });
     }

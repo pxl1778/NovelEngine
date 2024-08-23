@@ -28,7 +28,7 @@ public class HistoryMenu : Graphic
         this.rectTransform.anchoredPosition = new Vector2(this.rectTransform.anchoredPosition.x, endYPos + 50);
         this.rectTransform.DOAnchorPosY(endYPos, 0.2f);
 
-        List<DialogueNodeData> historyList = GameManager.instance.DialogueManager.GetHistory();
+        List<DialogueNodeData> historyList = NovelManager.instance.DialogueManager.GetHistory();
         for(int i = previousLine; i < historyList.Count; i++) {
             GameObject group = GameObject.Instantiate<GameObject>(HistoryGroupPrefab, ScrollParent.transform);
             Text[] texts = group.GetComponentsInChildren<Text>();
