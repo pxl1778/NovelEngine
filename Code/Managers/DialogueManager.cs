@@ -65,8 +65,8 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
             //DialogueFileName = currentSave.sceneName;
             choices = currentSave.choices.ToList();
         }
-        NovelManager.instance.EventManager.Pause.AddListener(() => { paused = true; tweenSequence?.Pause(); timeScale = 0.0f; });
-        NovelManager.instance.EventManager.Unpause.AddListener(() => { paused = false; tweenSequence?.TogglePause(); timeScale = 1.0f; });
+        NovelManager.instance.EventManager.onPause.AddListener(() => { paused = true; tweenSequence?.Pause(); timeScale = 0.0f; });
+        NovelManager.instance.EventManager.onUnpause.AddListener(() => { paused = false; tweenSequence?.TogglePause(); timeScale = 1.0f; });
 
 
         // LoadDialogue(DebugDialogueTextAsset);
@@ -428,13 +428,13 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
                     Reset();
                     // Next Scene
                     if (nextContainer) {
-                        NovelManager.instance.EventManager.EndNovelScene.Invoke();
+                        NovelManager.instance.EndScene(dialogue);
                         NovelManager.instance.LoadScene(nextContainer);
                     } else {
                         NovelCanvasGroup.DOFade(0, 0.2f).onComplete = () => {
                             NovelCanvasGroup.interactable = false;
                             NovelCanvasGroup.blocksRaycasts = false;
-                            NovelManager.instance.EventManager.EndNovelScene.Invoke();
+                            NovelManager.instance.EventManager.EndNovelScene();
                         };
                     }
                 };
@@ -452,6 +452,7 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
         }
         characterDictionary = new Dictionary<string, AnimatedSprite>();
         currentSave = null;
+        NovelManager.instance.EventManager.ResetVN();
     }
 
     public List<DialogueNodeData> GetHistory() {

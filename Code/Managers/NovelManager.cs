@@ -14,6 +14,7 @@ public class NovelManager : MonoBehaviour
     private DialogueManager dialogueManager;
 
     public DialogueContainer NextScene = null;
+    public List<string> CompletedDialogues { get; private set; }
 
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class NovelManager : MonoBehaviour
             EventManager = this.GetComponent<EventManager>();
             UIUtility = this.GetComponent<UIUtility>();
             SaveManager = this.GetComponent<SaveManager>();
+            CompletedDialogues = new List<string>();
             SceneManager.sceneLoaded += OnSceneLoaded;
         } else if (instance != null)
         {
@@ -39,6 +41,17 @@ public class NovelManager : MonoBehaviour
 #else
          Application.Quit();
 #endif
+    }
+
+    public void EndScene(DialogueContainer dialogueContainer) {
+        if (!CompletedDialogues.Contains(dialogueContainer.Id)) {
+            CompletedDialogues.Add(dialogueContainer.Id);
+        }
+        EventManager.EndNovelScene();
+    }
+
+    public bool CheckIfDialogueCompleted(DialogueContainer vnScene) {
+        return CompletedDialogues.Contains(vnScene.Id);
     }
 
     public void LoadScene(DialogueContainer nextDialogue) {

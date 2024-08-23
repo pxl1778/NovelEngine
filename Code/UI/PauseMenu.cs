@@ -85,6 +85,7 @@ public class PauseMenu : MonoBehaviour, IPointerEnterHandler
         onTop = false;
         previousButton = button;
         HistoryMenu.gameObject.SetActive(true);
+        HistoryMenu.ShowMenu();
         eventSystem.SetSelectedGameObject(null);
     }
 
@@ -136,7 +137,7 @@ public class PauseMenu : MonoBehaviour, IPointerEnterHandler
         if (positionTween != null) { positionTween.Kill(); }
         rotateTween = PauseButton.GetComponentsInChildren<Image>()[1].rectTransform.DORotate(new Vector3(0.0f, 0.0f, 0.0f), 0.2f);
         positionTween = this.GetComponent<RectTransform>().DOAnchorPosY(200.0f, 0.2f);
-        NovelManager.instance.EventManager.Pause.Invoke();
+        NovelManager.instance.EventManager.Pause();
     }
 
     private void ClosePauseMenu()
@@ -148,6 +149,6 @@ public class PauseMenu : MonoBehaviour, IPointerEnterHandler
         rotateTween = PauseButton.GetComponentsInChildren<Image>()[1].rectTransform.DORotate(new Vector3(0.0f, 0.0f, 180.0f), 0.2f);
         positionTween = this.GetComponent<RectTransform>().DOAnchorPosY(0.0f, 0.2f);
         eventSystem.SetSelectedGameObject(null);
-        NovelManager.instance.EventManager.Unpause.Invoke();
+        NovelManager.instance.EventManager.Unpause();
     }
 }
