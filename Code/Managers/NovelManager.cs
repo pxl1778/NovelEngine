@@ -7,16 +7,15 @@ public class NovelManager : MonoBehaviour
 {
     public static NovelManager instance = null;
     
-    public EventManager EventManager { get; private set; }
-    public UIUtility UIUtility { get; private set; }
-    public SaveManager SaveManager { get; private set; }
-    public DialogueManager DialogueManager { get { return dialogueManager; } }
-    private DialogueManager dialogueManager;
+    public EventManager EventManager { get; protected set; }
+    public UIUtility UIUtility { get; protected set; }
+    public SaveManager SaveManager { get; protected set; }
+    public DialogueManager DialogueManager { get; protected set; }
 
     public DialogueContainer NextScene = null;
-    public List<string> CompletedDialogues { get; private set; }
+    public List<string> CompletedDialogues { get; protected set; }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         if (instance == null)
         {
@@ -43,7 +42,7 @@ public class NovelManager : MonoBehaviour
 #endif
     }
 
-    public void EndScene(DialogueContainer dialogueContainer) {
+    public virtual void EndScene(DialogueContainer dialogueContainer) {
         if (!CompletedDialogues.Contains(dialogueContainer.Id)) {
             CompletedDialogues.Add(dialogueContainer.Id);
         }
@@ -66,9 +65,9 @@ public class NovelManager : MonoBehaviour
         //});
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        if (dialogueManager == null && GameObject.Find("NovelCanvas") != null) {
-            dialogueManager = GameObject.Find("NovelCanvas").GetComponent<DialogueManager>();
+    protected void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        if (DialogueManager == null && GameObject.Find("NovelCanvas") != null) {
+            DialogueManager = GameObject.Find("NovelCanvas").GetComponent<DialogueManager>();
         }
     }
 }

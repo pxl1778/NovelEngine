@@ -35,7 +35,13 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
     [SerializeField]
     protected ChoiceList ChoicesList;
     [SerializeField]
+    protected CanvasGroup SidePanelsGroup;
+    [SerializeField]
     protected CanvasGroup MaskGroup;
+
+    [Header("Settings")]
+    [SerializeField]
+    private bool beginOnStart = true;
 
     private float timeScale = 1.0f;
     private float delayTimer = 0.0f;
@@ -49,7 +55,6 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
     private Sequence tweenSequence;
     private Image currentBackground;
     private DialogueNodeData currentLine;
-    private int dataLoaded = 0;
     private Dictionary<string, AnimatedSprite> characterDictionary = new Dictionary<string, AnimatedSprite>();
     private List<string> choices = new List<string>();
     private SaveObject currentSave;
@@ -75,6 +80,7 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
         if (dialogue == null) {
             dialogue = debugDialogue;
         }
+        if(!beginOnStart) { return; }
         NodeLinkData nextLink = dialogue.NodeLinks.Where(link => link.BaseNodeGuid == dialogue.StartingNodeGUID).FirstOrDefault();
         DialogueNodeData nextNode = dialogue.DialogueNodeDatas.Where(node => node.Guid == nextLink.TargetNodeGuid).FirstOrDefault();
         currentLine = nextNode;
@@ -123,6 +129,31 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
                 EndLine();
             }
         }
+    }
+
+    public void LoadDialogue(DialogueContainer vnScene) {
+        dialogue = vnScene;
+        NodeLinkData nextLink = dialogue.NodeLinks.Where(link => link.BaseNodeGuid == dialogue.StartingNodeGUID).FirstOrDefault();
+        DialogueNodeData nextNode = dialogue.DialogueNodeDatas.Where(node => node.Guid == nextLink.TargetNodeGuid).FirstOrDefault();
+        currentLine = nextNode;
+        delayTimer = 2.0f;
+        historyList.Add(nextNode);
+
+        NovelCanvasGroup.blocksRaycasts = true;
+        NovelCanvasGroup.interactable = true;
+        NovelCanvasGroup.DOFade(1.0f, 0.2f);
+        if (currentLine.Background != null) {
+            if (currentBackground == null) {
+                currentBackground = GameObject.Instantiate(BackgroundPrefab, BackgroundsParent.transform).GetComponent<Image>();
+            }
+            currentBackground.sprite = currentLine.Background;
+        }
+        Dimmer.color = new Color(0, 0, 0, 0);
+        Dimmer.DOFade(0.8f, 1.0f);
+        FadeImage.color = new Color(0, 0, 0, 1);
+        FadeIn().onComplete = () => {
+            DialogueBox.FadeBoxIn().onComplete = () => { ContinueDialogue(true); };
+        };
     }
 
     public void OnPointerClick(PointerEventData e) {
@@ -241,6 +272,7 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
         currentBackground = GameObject.Instantiate(BackgroundPrefab, BackgroundsParent.transform).GetComponent<Image>();
         currentBackground.sprite = newBackground;
         currentBackground.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        SidePanelsGroup.DOFade(1, 2.0f);
     }
 
     void ContinueDialogue(bool firstLine = false, NodeLinkData linkChoice = null) {
@@ -434,7 +466,7 @@ public class DialogueManager : MonoBehaviour, IPointerClickHandler {
                         NovelCanvasGroup.DOFade(0, 0.2f).onComplete = () => {
                             NovelCanvasGroup.interactable = false;
                             NovelCanvasGroup.blocksRaycasts = false;
-                            NovelManager.instance.EventManager.EndNovelScene();
+                            NovelManager.instance.EndScene(dialogue);
                         };
                     }
                 };

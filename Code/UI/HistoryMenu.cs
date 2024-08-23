@@ -54,10 +54,6 @@ public class HistoryMenu : MonoBehaviour {
         }
         previousLine = historyList.Count;
 
-        //ScrollRect.content.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
-        //ScrollRect.content.GetComponent<ContentSizeFitter>().SetLayoutVertical();
-
-        //ScrollRect.verticalNormalizedPosition = 0;
         Canvas.ForceUpdateCanvases();
         ScrollParent.SetActive(false);
         StartCoroutine(ForceScrollDown());

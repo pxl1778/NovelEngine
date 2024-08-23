@@ -13,8 +13,6 @@ public class MouseBubble : MonoBehaviour
     private Material mat;
     [SerializeField]
     private Color color;
-    private float distance = 0;
-    private Tween tween;
     [SerializeField]
     private float duration = 0.5f;
     [SerializeField]

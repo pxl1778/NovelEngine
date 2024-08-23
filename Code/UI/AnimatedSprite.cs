@@ -72,10 +72,6 @@ public class AnimatedSprite : MonoBehaviour
     //    }
     //}
 
-    public void PlayReaction(string reactionString) {
-        reactionContainer.PlayReaction(reactionString);
-    }
-
     public void PlayReaction(GameObject reactionObject) {
         Instantiate(reactionObject, reactionContainer.transform);
     }
