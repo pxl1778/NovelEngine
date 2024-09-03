@@ -5,6 +5,7 @@ using UnityEngine;
 public static class DataConstants
 {
     public static string PLAYERPREFS_CURRENTSCENE = "currentScene";
+    public static string PLAYERPREFS_DIALOGUELOADPATH = "dialogueLoadPath";
 
     public static string FIRST_SCENE = "";
 }

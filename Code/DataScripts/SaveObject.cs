@@ -8,6 +8,7 @@ public class SaveObject
     public int slot;
     public string date;
     public string sceneName;
-    public int line;
-    public string[] choices;
+    public string dialogueLoadPath;
+    public string lineGuid;
+    public SerializableDictionary<string, string> choices;
 }
