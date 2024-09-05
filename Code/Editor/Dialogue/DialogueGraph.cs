@@ -61,7 +61,25 @@ public class DialogueGraph : EditorWindow
 
     private void GenerateBlackboard() {
         var blackboard = new Blackboard(_graphView);
-        blackboard.Add(new BlackboardSection { title = "Exposed Properties" });
+        _graphView.Blackboard = blackboard;
+        blackboard.scrollable = true;
+        blackboard.subTitle = "";
+        //blackboard.Add(new BlackboardSection { title = "Exposed Properties" });
+        //blackboard.addItemRequested = _blackboard =>
+        //{
+        //    _graphView.AddPropertyToBlackboard();
+        //};
+
+        blackboard.editTextRequested = (_blackboard, element, newValue) =>
+        {
+            var oldPropertyName = ((BlackboardField)element).text;
+            //if (_graphView.blackboardProperties.Any(x => x.text == newValue)) {
+            //    EditorUtility.DisplayDialog("Error", "This property name already exists, please chose another one.",
+            //        "OK");
+            //    return;
+            //}
+            ((BlackboardField)element).text = newValue;
+        };
 
         var shortLineProperty = new BlackboardField { text = "Hello", typeText = "Short Line" };
         var container = new VisualElement();

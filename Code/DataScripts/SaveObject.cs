@@ -10,5 +10,7 @@ public class SaveObject
     public string sceneName;
     public string dialogueLoadPath;
     public string lineGuid;
+    public List<string> completedDialogues;
+    public List<string> keyChoices;
     public SerializableDictionary<string, string> choices;
 }

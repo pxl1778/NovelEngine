@@ -60,6 +60,21 @@ public class GraphSaveUtility
                     Position = node.GetPosition().position,
                     NextScene = nodeData.NextScene
                 });
+            } else if (node is MakeChoiceNode) {
+                MakeChoiceNodeData nodeData = node.NodeData as MakeChoiceNodeData;
+                dialogueContainer.MakeChoiceNodeDatas.Add(new MakeChoiceNodeData {
+                    Guid = node.GUID,
+                    Position = node.GetPosition().position,
+                    ChoiceKey = nodeData.ChoiceKey,
+                    Activate = nodeData.Activate
+                });
+            } else if (node is ChoiceBranchNode) {
+                ChoiceBranchNodeData nodeData = node.NodeData as ChoiceBranchNodeData;
+                dialogueContainer.ChoiceBranchNodeDatas.Add(new ChoiceBranchNodeData {
+                    Guid = node.GUID,
+                    Position = node.GetPosition().position,
+                    ChoiceKey = nodeData.ChoiceKey
+                });
             }
         }
 
@@ -122,6 +137,18 @@ public class GraphSaveUtility
             tempNode.GUID = nodeData.Guid;
             _targetGraphView.AddElement(tempNode);
         }
+        // Make Choice Nodes
+        foreach (var nodeData in _containerCache.MakeChoiceNodeDatas) {
+            var tempNode = _targetGraphView.CreateMakeChoiceNode(nodeData.Position, nodeData);
+            tempNode.GUID = nodeData.Guid;
+            _targetGraphView.AddElement(tempNode);
+        }
+        // Make Branch Nodes
+        foreach (var nodeData in _containerCache.ChoiceBranchNodeDatas) {
+            var tempNode = _targetGraphView.CreateChoiceBranchNode(nodeData.Position, nodeData);
+            tempNode.GUID = nodeData.Guid;
+            _targetGraphView.AddElement(tempNode);
+        }
     }
 
     private void ConnectNodes() {
@@ -132,12 +159,7 @@ public class GraphSaveUtility
                 var targetNode = Nodes.First(x => x.GUID == targetNodeGuid);
                 LinkNodes(Nodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0], connections[j]);
 
-                Vector2 position = Vector2.zero;
-                if(targetNode is DialogueNode) {
-                    position = _containerCache.DialogueNodeDatas.First(x => x.Guid == targetNodeGuid).Position;
-                } else {
-                    position = _containerCache.SceneNodeDatas.First(x => x.Guid == targetNodeGuid).Position;
-                }
+                Vector2 position = _containerCache.AllNodeDatas.First(x => x.Guid == targetNodeGuid).Position;
                 targetNode.SetPosition(new Rect(
                     position,
                     BaseNode.defaultNodeSize

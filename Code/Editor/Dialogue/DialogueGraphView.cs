@@ -16,6 +16,8 @@ public class DialogueGraphView : GraphView
     private NodeSearchWindow _searchWindow;
     private EditorWindow _editorWindow;
     private BlackboardField shortLineProperty;
+    public List<BlackboardField> blackboardProperties = new List<BlackboardField>();
+    public Blackboard Blackboard = new Blackboard();
     public DialogueContainer containerCache;
 
     public DialogueGraphView(EditorWindow editorWindow) {
@@ -68,6 +70,9 @@ public class DialogueGraphView : GraphView
                 if (element is SceneNode) {
                     containerCache.SceneNodeDatas.RemoveAll(node => node.Guid == ((SceneNode)element).GUID);
                 }
+                if (element is MakeChoiceNode) {
+                    containerCache.MakeChoiceNodeDatas.RemoveAll(node => node.Guid == ((MakeChoiceNode)element).GUID);
+                }
                 EditorUtility.SetDirty(containerCache);
             });
         }
@@ -87,6 +92,14 @@ public class DialogueGraphView : GraphView
 
         return change;
     }
+
+    //public void AddPropertyToBlackboard() {
+    //    var newProperty = new BlackboardField { text = "Hello", typeText = "Choice" };
+    //    blackboardProperties.Add(newProperty);
+    //    var container = new VisualElement();
+    //    container.Add(newProperty);
+    //    Blackboard.Add(container);
+    //}
 
     public void SetShortLineProperty(BlackboardField property) {
         shortLineProperty = property;
@@ -156,20 +169,37 @@ public class DialogueGraphView : GraphView
         return sceneNode;
     }
 
+    public MakeChoiceNode CreateMakeChoiceNode(Vector2 position, MakeChoiceNodeData nodeData = null, Edge outputEdge = null) {
+        var makeChoiceNode = MakeChoiceNode.CreateNode(this, position, nodeData, outputEdge);
+        AddElement(makeChoiceNode);
+        return makeChoiceNode;
+    }
+
+    public ChoiceBranchNode CreateChoiceBranchNode(Vector2 position, ChoiceBranchNodeData nodeData = null, Edge activeEdge = null, Edge inactiveEdge = null) {
+        var makeChoiceNode = ChoiceBranchNode.CreateNode(this, position, nodeData, activeEdge, inactiveEdge);
+        AddElement(makeChoiceNode);
+        return makeChoiceNode;
+    }
+
     public void ReloadNode(string guid) {
         //Remake Node
-        BaseNodeData reloadData = containerCache.DialogueNodeDatas.Find(x => x.Guid == guid);
+        var reloadData = containerCache.AllNodeDatas.Find(x => x.Guid == guid);
         BaseNode newNode = null;
         BaseNode nodeToDelete = nodes.ToList().Cast<BaseNode>().ToList().Find(x => x.GUID == guid);
         RemoveElement(nodeToDelete);
-        if (reloadData != null) {
-            DialogueNodeData dialogueData = reloadData as DialogueNodeData;
+        if(reloadData is DialogueNodeData dialogueData) {
             var outputEdges = edges.ToList().Where(x => ((BaseNode)x.output.node).GUID == guid).ToList();
             newNode = CreateDialogueNode(dialogueData.DialogueText, dialogueData.Position, dialogueData.SpeakingCharacterId, dialogueData, outputEdges);
-        } else {
-            reloadData = containerCache.SceneNodeDatas.Find(x => x.Guid == guid);
-            SceneNodeData sceneData = reloadData as SceneNodeData;
+        } else if(reloadData is SceneNodeData sceneData) {
             newNode = CreateSceneNode(sceneData.Position, sceneData);
+        } else if(reloadData is MakeChoiceNodeData makeChoiceData) {
+            var outputEdge = edges.ToList().Where(x => ((BaseNode)x.output.node).GUID == guid).FirstOrDefault();
+            newNode = CreateMakeChoiceNode(makeChoiceData.Position, makeChoiceData, outputEdge);
+        } else if (reloadData is ChoiceBranchNodeData branchData) {
+            var outputEdges = edges.ToList().Where(x => ((BaseNode)x.output.node).GUID == guid).ToList();
+            var activeEdge = outputEdges.FirstOrDefault(x => x.output.portName == "Active");
+            var inactiveEdge = outputEdges.FirstOrDefault(x => x.output.portName == "Inactive");
+            newNode = CreateChoiceBranchNode(branchData.Position, branchData, activeEdge, inactiveEdge);
         }
 
         //Reconnect Input Port

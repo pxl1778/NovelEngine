@@ -11,6 +11,8 @@ public enum SpecialAction { Move, Flip }
 public class NovelData : ScriptableObject {
     [SerializeField]
     private SerializableDictionary<string, CharacterInfoSO> CharacterList = new SerializableDictionary<string, CharacterInfoSO>();
+    [SerializeField]
+    private List<string> ChoiceKeys = new List<string>();
     private static string assetName => nameof(NovelData) + "SO";
     private static NovelData s_instance;
     public static NovelData instance {
@@ -39,6 +41,10 @@ public class NovelData : ScriptableObject {
             }
             return null;
         }
+    }
+
+    public List<string> GetChoiceKeys() {
+        return ChoiceKeys;
     }
 
     public IEnumerable<string> GetCharacterIds() {
