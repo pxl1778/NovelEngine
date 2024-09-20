@@ -13,6 +13,7 @@ public class NovelData : ScriptableObject {
     private SerializableDictionary<string, CharacterInfoSO> CharacterList = new SerializableDictionary<string, CharacterInfoSO>();
     [SerializeField]
     private List<string> ChoiceKeys = new List<string>();
+    public static string NARRATOR = "Narrator";
     private static string assetName => nameof(NovelData) + "SO";
     private static NovelData s_instance;
     public static NovelData instance {

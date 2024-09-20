@@ -75,20 +75,30 @@ public class DialogueNode : BaseNode {
         dialogueField.MarkDirtyRepaint();
 
         //Speaking Character
-        var characterDropdown = new DropdownField("Speaking Character", NovelData.instance.GetCharacterIds().Where(x => x != "").ToList(), 0);
+        var characterList = NovelData.instance.GetCharacterIds().Where(x => x != "").ToList();
+        characterList.Add(NovelData.NARRATOR);
+        var characterDropdown = new DropdownField("Speaking Character", characterList, 0);
         characterDropdown.labelElement.style.minWidth = 20;
         characterDropdown.RegisterValueChangedCallback(evt => {
             Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoSpeaking:" + dialogueNode.GUID);
             dialogueNodeData.SpeakingCharacterId = evt.newValue;
             EditorUtility.SetDirty(graphView.containerCache);
+            if(evt.newValue != NovelData.NARRATOR) {
+                CharacterInfoSO charInfo = NovelData.instance.GetCharacterInfoSO(dialogueNodeData.SpeakingCharacterId);
+                if (charInfo != null) {
+                    dialogueNode.titleContainer.style.backgroundColor = charInfo.color;
+                }
+            } else {
+                dialogueNode.titleContainer.style.backgroundColor = Color.gray;
+            }
+        });
+        if (dialogueNodeData.SpeakingCharacterId != NovelData.NARRATOR) {
             CharacterInfoSO charInfo = NovelData.instance.GetCharacterInfoSO(dialogueNodeData.SpeakingCharacterId);
             if (charInfo != null) {
                 dialogueNode.titleContainer.style.backgroundColor = charInfo.color;
             }
-        });
-        CharacterInfoSO charInfo = NovelData.instance.GetCharacterInfoSO(dialogueNodeData.SpeakingCharacterId);
-        if (charInfo != null) {
-            dialogueNode.titleContainer.style.backgroundColor = charInfo.color;
+        } else {
+            dialogueNode.titleContainer.style.backgroundColor = Color.gray;
         }
         characterDropdown.SetValueWithoutNotify(characterId.ToString());
         dialogueNode.mainContainer.Add(characterDropdown);
