@@ -34,8 +34,8 @@ public class GraphSaveUtility
             });
         }
 
-        foreach(var node in Nodes.Where(node => !node.EntryPoint)) {
-            if(node is DialogueNode) {
+        foreach (var node in Nodes.Where(node => !node.EntryPoint)) {
+            if (node is DialogueNode) {
                 DialogueNodeData nodeData = node.NodeData as DialogueNodeData;
                 dialogueContainer.DialogueNodeDatas.Add(new DialogueNodeData {
                     Guid = node.GUID,
@@ -53,7 +53,7 @@ public class GraphSaveUtility
                     ScreenFadeOut = nodeData.ScreenFadeOut,
                     SpecialActionList = nodeData.SpecialActionList
                 });
-            } else if(node is SceneNode) {
+            } else if (node is SceneNode) {
                 SceneNodeData nodeData = node.NodeData as SceneNodeData;
                 dialogueContainer.SceneNodeDatas.Add(new SceneNodeData {
                     Guid = node.GUID,
@@ -74,6 +74,13 @@ public class GraphSaveUtility
                     Guid = node.GUID,
                     Position = node.GetPosition().position,
                     ChoiceKey = nodeData.ChoiceKey
+                });
+            } else if (node is SpawnPointNode) {
+                SpawnPointNodeData nodeData = node.NodeData as SpawnPointNodeData;
+                dialogueContainer.SpawnPointNodeDatas.Add(new SpawnPointNodeData {
+                    Guid = node.GUID,
+                    Position = node.GetPosition().position,
+                    SpawnPoint = nodeData.SpawnPoint
                 });
             }
         }
@@ -146,6 +153,12 @@ public class GraphSaveUtility
         // Make Branch Nodes
         foreach (var nodeData in _containerCache.ChoiceBranchNodeDatas) {
             var tempNode = _targetGraphView.CreateChoiceBranchNode(nodeData.Position, nodeData);
+            tempNode.GUID = nodeData.Guid;
+            _targetGraphView.AddElement(tempNode);
+        }
+        // Spawn Point Nodes
+        foreach (var nodeData in _containerCache.SpawnPointNodeDatas) {
+            var tempNode = _targetGraphView.CreateSpawnPointNode(nodeData.Position, nodeData);
             tempNode.GUID = nodeData.Guid;
             _targetGraphView.AddElement(tempNode);
         }

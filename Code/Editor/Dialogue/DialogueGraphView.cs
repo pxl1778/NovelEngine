@@ -73,6 +73,9 @@ public class DialogueGraphView : GraphView
                 if (element is MakeChoiceNode) {
                     containerCache.MakeChoiceNodeDatas.RemoveAll(node => node.Guid == ((MakeChoiceNode)element).GUID);
                 }
+                if (element is SpawnPointNode) {
+                    containerCache.SpawnPointNodeDatas.RemoveAll(node => node.Guid == ((SpawnPointNode)element).GUID);
+                }
                 EditorUtility.SetDirty(containerCache);
             });
         }
@@ -169,6 +172,12 @@ public class DialogueGraphView : GraphView
         return sceneNode;
     }
 
+    public SpawnPointNode CreateSpawnPointNode(Vector2 position, SpawnPointNodeData nodeData = null) {
+        var spawnPointNode = SpawnPointNode.CreateNode(this, position, nodeData);
+        AddElement(spawnPointNode);
+        return spawnPointNode;
+    }
+
     public MakeChoiceNode CreateMakeChoiceNode(Vector2 position, MakeChoiceNodeData nodeData = null, Edge outputEdge = null) {
         var makeChoiceNode = MakeChoiceNode.CreateNode(this, position, nodeData, outputEdge);
         AddElement(makeChoiceNode);
@@ -192,6 +201,8 @@ public class DialogueGraphView : GraphView
             newNode = CreateDialogueNode(dialogueData.DialogueText, dialogueData.Position, dialogueData.SpeakingCharacterId, dialogueData, outputEdges);
         } else if(reloadData is SceneNodeData sceneData) {
             newNode = CreateSceneNode(sceneData.Position, sceneData);
+        } else if (reloadData is SpawnPointNodeData spawnPointData) {
+            newNode = CreateSpawnPointNode(spawnPointData.Position, spawnPointData);
         } else if(reloadData is MakeChoiceNodeData makeChoiceData) {
             var outputEdge = edges.ToList().Where(x => ((BaseNode)x.output.node).GUID == guid).FirstOrDefault();
             newNode = CreateMakeChoiceNode(makeChoiceData.Position, makeChoiceData, outputEdge);

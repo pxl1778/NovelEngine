@@ -11,6 +11,7 @@ public class DialogueContainer : ScriptableObject {
     public List<NodeLinkData> NodeLinks = new List<NodeLinkData>();
     public List<DialogueNodeData> DialogueNodeDatas = new List<DialogueNodeData>();
     public List<SceneNodeData> SceneNodeDatas = new List<SceneNodeData>();
+    public List<SpawnPointNodeData> SpawnPointNodeDatas = new List<SpawnPointNodeData>();
     public List<MakeChoiceNodeData> MakeChoiceNodeDatas = new List<MakeChoiceNodeData>();
     public List<ChoiceBranchNodeData> ChoiceBranchNodeDatas = new List<ChoiceBranchNodeData>();
 
@@ -21,6 +22,7 @@ public class DialogueContainer : ScriptableObject {
             List<BaseNodeData> allNodes = new List<BaseNodeData>();
             allNodes.AddRange(DialogueNodeDatas);
             allNodes.AddRange(SceneNodeDatas);
+            allNodes.AddRange(SpawnPointNodeDatas);
             allNodes.AddRange(MakeChoiceNodeDatas);
             allNodes.AddRange(ChoiceBranchNodeDatas);
             return allNodes;

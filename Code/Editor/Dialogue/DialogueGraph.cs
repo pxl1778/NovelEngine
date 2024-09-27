@@ -111,7 +111,7 @@ public class DialogueGraph : EditorWindow
     private void MakeNewFile() {
         if (EditorUtility.DisplayDialog("Make A New Graph", "Would you like to make a new graph?\n(Remember to save your current graph!)", "Yes", "No")) {
             // Clear graph
-            List<DialogueNode> nodes = _graphView.nodes.ToList().Cast<DialogueNode>().ToList();
+            List<BaseNode> nodes = _graphView.nodes.ToList().Cast<BaseNode>().ToList();
             List<Edge> edges = _graphView.edges.ToList();
             foreach (var node in nodes) {
                 if (node.EntryPoint) continue;

@@ -32,7 +32,11 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider {
             new SearchTreeEntry(new GUIContent("Choice Branch Node")){
                 userData = new ChoiceBranchNode(),
                 level = 1
-            }
+            },
+            new SearchTreeEntry(new GUIContent("Spawn Point Node")){
+                userData = new SpawnPointNode(),
+                level = 1
+            },
         };
         return tree;
     }
@@ -64,6 +68,11 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider {
             case ChoiceBranchNode:
                 Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNew");
                 _graphView.CreateChoiceBranchNode(localMousePosition);
+                EditorUtility.SetDirty(_graphView.containerCache);
+                return true;
+            case SpawnPointNode:
+                Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNew");
+                _graphView.CreateSpawnPointNode(localMousePosition);
                 EditorUtility.SetDirty(_graphView.containerCache);
                 return true;
             default:
