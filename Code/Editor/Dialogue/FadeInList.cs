@@ -146,6 +146,10 @@ public class FadeInListItem : VisualElement {
     private void UpdateAnimatorDropdownItems(string characterId) {
         CharacterInfoSO charInfo = NovelData.instance.GetCharacterInfoSO(characterId);
         if (charInfo != null) {
+            if(charInfo.characterPrefab == null) {
+                Debug.LogWarning("The charInfo for: " + characterId + " does not have a characterPrefab set in the CharacterInfoSO.");
+                return;
+            }
             Animator animator = charInfo.characterPrefab.GetComponentInChildren<Animator>();
             if (animator.runtimeAnimatorController) {
                 var controller = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEditor.Animations.AnimatorController>(UnityEditor.AssetDatabase.GetAssetPath(animator.runtimeAnimatorController));
