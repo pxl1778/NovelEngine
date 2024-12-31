@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 
-public enum SpecialAction { Move, Flip }
+public enum SpecialAction { Move, Flip, UnlockCharacterInfo }
 
 [CreateAssetMenu(fileName = "NovelDataSO", menuName = "ScriptableObjects/NovelDataSO")]
 public class NovelData : ScriptableObject {
