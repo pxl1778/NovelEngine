@@ -165,8 +165,17 @@ public class GraphSaveUtility
     }
 
     private void ConnectNodes() {
-        for(var i = 0; i < Nodes.Count; i++) {
-            var connections = _containerCache.NodeLinks.Where(x => x.BaseNodeGuid == Nodes[i].GUID).ToList();
+        Dictionary<string, List<NodeLinkData>> linkMap = new Dictionary<string, List<NodeLinkData>>();
+        _containerCache.NodeLinks.ForEach(x => {
+            if(!linkMap.ContainsKey(x.BaseNodeGuid)) {
+                linkMap.Add(x.BaseNodeGuid, new List<NodeLinkData>());
+            }
+            linkMap[x.BaseNodeGuid].Add(x);
+        });
+        for (var i = 0; i < Nodes.Count; i++) {
+            //var connections = _containerCache.NodeLinks.Where(x => x.BaseNodeGuid == Nodes[i].GUID).ToList();
+            if (!linkMap.ContainsKey(Nodes[i].GUID)) { continue; }
+            var connections = linkMap[Nodes[i].GUID];
             for(var j=0; j < connections.Count; j++) {
                 var targetNodeGuid = connections[j].TargetNodeGuid;
                 var targetNode = Nodes.First(x => x.GUID == targetNodeGuid);
