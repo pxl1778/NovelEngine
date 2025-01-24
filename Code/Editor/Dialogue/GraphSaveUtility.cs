@@ -172,14 +172,15 @@ public class GraphSaveUtility
             }
             linkMap[x.BaseNodeGuid].Add(x);
         });
-        for (var i = 0; i < Nodes.Count; i++) {
-            //var connections = _containerCache.NodeLinks.Where(x => x.BaseNodeGuid == Nodes[i].GUID).ToList();
-            if (!linkMap.ContainsKey(Nodes[i].GUID)) { continue; }
-            var connections = linkMap[Nodes[i].GUID];
+        List<BaseNode> currentNodes = Nodes;
+        for (var i = 0; i < currentNodes.Count; i++) {
+            if (!linkMap.ContainsKey(currentNodes[i].GUID)) { continue; }
+            var connections = linkMap[currentNodes[i].GUID];
+
             for(var j=0; j < connections.Count; j++) {
                 var targetNodeGuid = connections[j].TargetNodeGuid;
-                var targetNode = Nodes.First(x => x.GUID == targetNodeGuid);
-                LinkNodes(Nodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0], connections[j]);
+                var targetNode = currentNodes.First(x => x.GUID == targetNodeGuid);
+                LinkNodes(currentNodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0], connections[j]);
 
                 Vector2 position = _containerCache.AllNodeDatas.First(x => x.Guid == targetNodeGuid).Position;
                 targetNode.SetPosition(new Rect(
