@@ -33,6 +33,10 @@ public class NovelData : ScriptableObject {
         }
     }
 
+    public void InitialLoad() {
+
+    }
+
     public CharacterInfoSO GetCharacterInfoSO(string characterString) {
         if (CharacterList.ContainsKey(characterString)) {
             return CharacterList[characterString];
