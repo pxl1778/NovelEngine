@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class DialogueNodeData : BaseNodeData {
     public string DialogueText = "DialogueNode";
     public string SpeakingCharacterId = "";
+    public string NameplateOverride = "";
     public SerializableDictionary<string, string> ChangeAnimationList = new SerializableDictionary<string, string>();
     public SerializableDictionary<string, FadeInListItemData> FadeInList = new SerializableDictionary<string, FadeInListItemData>();
     public List<string> FadeOutList = new List<string>();

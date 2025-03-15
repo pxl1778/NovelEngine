@@ -103,6 +103,22 @@ public class DialogueNode : BaseNode {
         characterDropdown.SetValueWithoutNotify(characterId.ToString());
         dialogueNode.mainContainer.Add(characterDropdown);
 
+        //Nameplate Override
+        var nameplateLabel = new Label("Nameplate Override");
+        dialogueNode.mainContainer.Add(nameplateLabel);
+        var nameplateField = new TextField(string.Empty);
+        nameplateField.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoNameplate:" + dialogueNode.GUID);
+            dialogueNodeData.NameplateOverride = evt.newValue;
+            EditorUtility.SetDirty(graphView.containerCache);
+        });
+        nameplateField.style.maxHeight = 100;
+        nameplateField.style.maxWidth = 260;
+        nameplateField.style.whiteSpace = WhiteSpace.Normal;
+        nameplateField.SetValueWithoutNotify(dialogueNodeData.NameplateOverride);
+        dialogueNode.mainContainer.Add(nameplateField);
+        nameplateField.MarkDirtyRepaint();
+
         //ExclaimTextBox
         var exclaimCheckbox = new Toggle("Shouting Textbox");
         exclaimCheckbox.RegisterValueChangedCallback(evt => {
