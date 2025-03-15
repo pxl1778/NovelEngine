@@ -106,6 +106,7 @@ public class DialogueNode : BaseNode {
         //Nameplate Override
         var nameplateLabel = new Label("Nameplate Override");
         dialogueNode.mainContainer.Add(nameplateLabel);
+        nameplateLabel.tooltip = "This will be shown as the character's name instead of their default Character Info name. Leave blank to use the character's default name.";
         var nameplateField = new TextField(string.Empty);
         nameplateField.RegisterValueChangedCallback(evt => {
             Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoNameplate:" + dialogueNode.GUID);

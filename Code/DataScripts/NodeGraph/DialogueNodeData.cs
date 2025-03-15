@@ -27,11 +27,13 @@ public class FadeInListItemData {
     public string animation = null;
     public float position = 1000;
     public bool flipped = false;
+    public bool startInBack = false;
 
-    public FadeInListItemData(string animation, float position = 3, bool flipped = false) {
+    public FadeInListItemData(string animation, float position = 3, bool flipped = false, bool startInBack = false) {
         this.animation = animation;
         this.position = position;
         this.flipped = flipped;
+        this.startInBack = startInBack;
     }
 }
 

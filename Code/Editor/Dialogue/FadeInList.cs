@@ -117,6 +117,18 @@ public class FadeInListItem : VisualElement {
         flipCheckbox.SetValueWithoutNotify(listItemData.flipped);
         flipCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
 
+        //Start In Back
+        var backCheckbox = new Toggle("Start In Back");
+        backCheckbox.tooltip = "When set to true, the character will be behind all other sprites when they fade in. Otherwise, they will be placed in front.";
+        backCheckbox.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(parentContainer.graphView.containerCache, "NodeUndoFadeInBack:" + dialogueNode.GUID);
+            nodeData.FadeInList[dropdownCharacter].startInBack = evt.newValue;
+            EditorUtility.SetDirty(parentContainer.graphView.containerCache);
+        });
+        Add(backCheckbox);
+        backCheckbox.SetValueWithoutNotify(listItemData.startInBack);
+        backCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
+
         style.backgroundColor = new Color(0.25f, 0.25f, 0.25f, 1);
         style.borderBottomColor = new Color(0, 0, 0, 1);
         style.borderBottomLeftRadius = 6;
