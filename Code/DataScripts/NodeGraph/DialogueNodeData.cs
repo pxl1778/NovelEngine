@@ -18,6 +18,9 @@ public class DialogueNodeData : BaseNodeData {
     public bool ExclaimTextBox;
     public bool ScreenFadeIn;
     public bool ScreenFadeOut;
+    public bool CameraShake;
+    public float ShakeAmplitude = 1;
+    public float ShakeDuration = 1;
     public List<ReactionListItemData> ReactionList = new List<ReactionListItemData>();
     public List<ActionListItemData> SpecialActionList  = new List<ActionListItemData>();
 }

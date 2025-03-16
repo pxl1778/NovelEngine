@@ -223,6 +223,7 @@ public class DialogueNode : BaseNode {
             dialogueNodeData.ScreenFadeIn = evt.newValue;
             EditorUtility.SetDirty(graphView.containerCache);
         });
+        openSceneFoldout = dialogueNodeData.ScreenFadeIn ? true : openSceneFoldout;
         sceneFoldout.Add(fadeInCheckbox);
         fadeInCheckbox.SetValueWithoutNotify(dialogueNodeData.ScreenFadeIn);
         fadeInCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
@@ -235,11 +236,67 @@ public class DialogueNode : BaseNode {
             dialogueNodeData.ScreenFadeOut = evt.newValue;
             EditorUtility.SetDirty(graphView.containerCache);
         });
+        openSceneFoldout = dialogueNodeData.ScreenFadeOut ? true : openSceneFoldout;
         sceneFoldout.Add(fadeOutCheckbox);
         fadeOutCheckbox.SetValueWithoutNotify(dialogueNodeData.ScreenFadeOut);
         fadeOutCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
 
-        sceneFoldout.value = openSceneFoldout || dialogueNodeData.ScreenFadeIn || dialogueNodeData.ScreenFadeOut;
+        //Camera Shake
+        var cameraShakeFoldout = new Foldout();
+        cameraShakeFoldout.text = "Camera Shake";
+        bool cameraShakeFoldoutOpen = false;
+
+        //Camera Shake Trigger
+        var cameraShakeCheckbox = new Toggle("Do Shake");
+        cameraShakeCheckbox.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoCameraShake:" + dialogueNode.GUID);
+            dialogueNodeData.CameraShake = evt.newValue;
+            EditorUtility.SetDirty(graphView.containerCache);
+        });
+        cameraShakeFoldoutOpen = dialogueNodeData.CameraShake ? true : cameraShakeFoldoutOpen;
+        cameraShakeFoldout.Add(cameraShakeCheckbox);
+        cameraShakeCheckbox.SetValueWithoutNotify(dialogueNodeData.CameraShake);
+        cameraShakeCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
+
+        //Shake Amplitude
+        var shakeAmplitudeSlider = new Slider("Shake Amplitude", 1, 200, SliderDirection.Horizontal);
+        shakeAmplitudeSlider.labelElement.style.minWidth = 100;
+        shakeAmplitudeSlider.tooltip = "How large the initial shake will be that then dwindles during the duration of the shake.";
+        var shakeAmplitudeText = new Label("1");
+        shakeAmplitudeText.style.minWidth = 30;
+        shakeAmplitudeSlider.contentContainer.Add(shakeAmplitudeText);
+        shakeAmplitudeSlider.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoShakeAmplitude:" + dialogueNode.GUID);
+            dialogueNodeData.ShakeAmplitude = evt.newValue;
+            shakeAmplitudeText.text = dialogueNodeData.ShakeAmplitude.ToString();
+            EditorUtility.SetDirty(graphView.containerCache);
+        });
+        cameraShakeFoldoutOpen = dialogueNodeData.CameraShake ? true : cameraShakeFoldoutOpen;
+        shakeAmplitudeSlider.SetValueWithoutNotify(dialogueNodeData.ShakeAmplitude);
+        shakeAmplitudeText.text = dialogueNodeData.ShakeAmplitude.ToString();
+        cameraShakeFoldout.Add(shakeAmplitudeSlider);
+
+        //Shake Duration
+        var shakeDurationSlider = new Slider("Shake Duration", 0.2f, 5, SliderDirection.Horizontal);
+        shakeDurationSlider.labelElement.style.minWidth = 100;
+        shakeDurationSlider.tooltip = "How long the shake goes on for.";
+        var shakeDurationText = new Label("0.2");
+        shakeDurationText.style.minWidth = 30;
+        shakeDurationSlider.contentContainer.Add(shakeDurationText);
+        shakeDurationSlider.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoFadeShakeDuration:" + dialogueNode.GUID);
+            dialogueNodeData.ShakeDuration = evt.newValue;
+            shakeDurationText.text = dialogueNodeData.ShakeDuration.ToString();
+            EditorUtility.SetDirty(graphView.containerCache);
+        });
+        cameraShakeFoldoutOpen = dialogueNodeData.CameraShake ? true : cameraShakeFoldoutOpen;
+        shakeDurationSlider.SetValueWithoutNotify(dialogueNodeData.ShakeDuration);
+        shakeDurationText.text = dialogueNodeData.ShakeDuration.ToString();
+        cameraShakeFoldout.Add(shakeDurationSlider);
+
+        cameraShakeFoldout.value = cameraShakeFoldoutOpen;
+        sceneFoldout.Add(cameraShakeFoldout);
+        sceneFoldout.value = openSceneFoldout || cameraShakeFoldoutOpen;
         dialogueNode.mainContainer.Add(sceneFoldout);
 
         //Special Actions
