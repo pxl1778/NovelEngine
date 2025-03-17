@@ -14,6 +14,7 @@ public class DialogueContainer : ScriptableObject {
     public List<SpawnPointNodeData> SpawnPointNodeDatas = new List<SpawnPointNodeData>();
     public List<MakeChoiceNodeData> MakeChoiceNodeDatas = new List<MakeChoiceNodeData>();
     public List<ChoiceBranchNodeData> ChoiceBranchNodeDatas = new List<ChoiceBranchNodeData>();
+    public List<CommentNodeData> CommentNodeDatas = new List<CommentNodeData>();
 
     public string StartingNodeGUID = "";
     public string ShortLine = "";
@@ -25,6 +26,7 @@ public class DialogueContainer : ScriptableObject {
             allNodes.AddRange(SpawnPointNodeDatas);
             allNodes.AddRange(MakeChoiceNodeDatas);
             allNodes.AddRange(ChoiceBranchNodeDatas);
+            allNodes.AddRange(CommentNodeDatas);
             return allNodes;
         } }
 

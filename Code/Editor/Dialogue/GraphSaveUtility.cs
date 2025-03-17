@@ -82,6 +82,13 @@ public class GraphSaveUtility
                     Position = node.GetPosition().position,
                     SpawnPoint = nodeData.SpawnPoint
                 });
+            } else if (node is CommentNode) {
+                CommentNodeData nodeData = node.NodeData as CommentNodeData;
+                dialogueContainer.CommentNodeDatas.Add(new CommentNodeData {
+                    Guid = node.GUID,
+                    Position = node.GetPosition().position,
+                    Comment = nodeData.Comment
+                });
             }
         }
 
@@ -159,6 +166,12 @@ public class GraphSaveUtility
         // Spawn Point Nodes
         foreach (var nodeData in _containerCache.SpawnPointNodeDatas) {
             var tempNode = _targetGraphView.CreateSpawnPointNode(nodeData.Position, nodeData);
+            tempNode.GUID = nodeData.Guid;
+            _targetGraphView.AddElement(tempNode);
+        }
+        // Spawn Point Nodes
+        foreach (var nodeData in _containerCache.CommentNodeDatas) {
+            var tempNode = _targetGraphView.CreateCommentNode(nodeData.Position, nodeData);
             tempNode.GUID = nodeData.Guid;
             _targetGraphView.AddElement(tempNode);
         }

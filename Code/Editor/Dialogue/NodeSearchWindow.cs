@@ -37,6 +37,10 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider {
                 userData = new SpawnPointNode(),
                 level = 1
             },
+            new SearchTreeEntry(new GUIContent("Comment Node")){
+                userData = new CommentNode(),
+                level = 1
+            },
         };
         return tree;
     }
@@ -73,6 +77,11 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider {
             case SpawnPointNode:
                 Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNew");
                 _graphView.CreateSpawnPointNode(localMousePosition);
+                EditorUtility.SetDirty(_graphView.containerCache);
+                return true;
+            case CommentNode:
+                Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNew");
+                _graphView.CreateCommentNode(localMousePosition);
                 EditorUtility.SetDirty(_graphView.containerCache);
                 return true;
             default:

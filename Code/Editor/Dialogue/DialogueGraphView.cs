@@ -76,6 +76,9 @@ public class DialogueGraphView : GraphView
                 if (element is SpawnPointNode) {
                     containerCache.SpawnPointNodeDatas.RemoveAll(node => node.Guid == ((SpawnPointNode)element).GUID);
                 }
+                if (element is CommentNode) {
+                    containerCache.CommentNodeDatas.RemoveAll(node => node.Guid == ((CommentNode)element).GUID);
+                }
                 EditorUtility.SetDirty(containerCache);
             });
         }
@@ -188,6 +191,12 @@ public class DialogueGraphView : GraphView
         var makeChoiceNode = ChoiceBranchNode.CreateNode(this, position, nodeData, activeEdge, inactiveEdge);
         AddElement(makeChoiceNode);
         return makeChoiceNode;
+    }
+
+    public CommentNode CreateCommentNode(Vector2 position, CommentNodeData nodeData = null, Edge activeEdge = null, Edge inactiveEdge = null) {
+        var commentNode = CommentNode.CreateNode(this, position, nodeData);
+        AddElement(commentNode);
+        return commentNode;
     }
 
     public void ReloadNode(string guid) {
