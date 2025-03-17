@@ -155,6 +155,7 @@ public class DialogueNode : BaseNode {
         var sceneFoldout = new Foldout();
         sceneFoldout.text = "Scene";
         bool openSceneFoldout = false;
+
         //Background
         var backgroundField = new ObjectField("Background");
         backgroundField.style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
@@ -241,13 +242,47 @@ public class DialogueNode : BaseNode {
         fadeOutCheckbox.SetValueWithoutNotify(dialogueNodeData.ScreenFadeOut);
         fadeOutCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
 
-        //Camera Shake
+        //Cg Foldout
+        var cgFoldout = new Foldout();
+        cgFoldout.text = "CG Layover";
+        bool cgFoldoutOpen = false;
+
+        //CG Image
+        var cgField = new ObjectField("CG Layover");
+        cgField.style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
+        cgField.objectType = typeof(Sprite);
+        cgField.labelElement.style.minWidth = 100;
+        cgField.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoCgImage:" + dialogueNode.GUID);
+            dialogueNodeData.CGImage = (Sprite)evt.newValue;
+            EditorUtility.SetDirty(graphView.containerCache);
+        });
+        if (dialogueNodeData.CGImage != null) {
+            cgField.SetValueWithoutNotify(dialogueNodeData.CGImage);
+            cgFoldoutOpen = true;
+        }
+        cgFoldout.Add(cgField);
+
+        //Hide CG
+        var hideCgCheckbox = new Toggle("Hide CG Layover");
+        hideCgCheckbox.style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
+        hideCgCheckbox.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoHideCg:" + dialogueNode.GUID);
+            dialogueNodeData.HideCG = evt.newValue;
+            EditorUtility.SetDirty(graphView.containerCache);
+        });
+        cgFoldout.Add(hideCgCheckbox);
+        hideCgCheckbox.SetValueWithoutNotify(dialogueNodeData.HideCG);
+        hideCgCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
+
+        //Camera Shake Foldout
         var cameraShakeFoldout = new Foldout();
         cameraShakeFoldout.text = "Camera Shake";
         bool cameraShakeFoldoutOpen = false;
 
         //Camera Shake Trigger
         var cameraShakeCheckbox = new Toggle("Do Shake");
+        cameraShakeCheckbox.style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
         cameraShakeCheckbox.RegisterValueChangedCallback(evt => {
             Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoCameraShake:" + dialogueNode.GUID);
             dialogueNodeData.CameraShake = evt.newValue;
@@ -260,6 +295,7 @@ public class DialogueNode : BaseNode {
 
         //Shake Amplitude
         var shakeAmplitudeSlider = new Slider("Shake Amplitude", 1, 200, SliderDirection.Horizontal);
+        shakeAmplitudeSlider.style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
         shakeAmplitudeSlider.labelElement.style.minWidth = 100;
         shakeAmplitudeSlider.tooltip = "How large the initial shake will be that then dwindles during the duration of the shake.";
         var shakeAmplitudeText = new Label("1");
@@ -278,6 +314,7 @@ public class DialogueNode : BaseNode {
 
         //Shake Duration
         var shakeDurationSlider = new Slider("Shake Duration", 0.2f, 5, SliderDirection.Horizontal);
+        shakeDurationSlider.style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
         shakeDurationSlider.labelElement.style.minWidth = 100;
         shakeDurationSlider.tooltip = "How long the shake goes on for.";
         var shakeDurationText = new Label("0.2");
@@ -294,9 +331,11 @@ public class DialogueNode : BaseNode {
         shakeDurationText.text = dialogueNodeData.ShakeDuration.ToString();
         cameraShakeFoldout.Add(shakeDurationSlider);
 
+        cgFoldout.value = cgFoldoutOpen;
+        sceneFoldout.Add(cgFoldout);
         cameraShakeFoldout.value = cameraShakeFoldoutOpen;
         sceneFoldout.Add(cameraShakeFoldout);
-        sceneFoldout.value = openSceneFoldout || cameraShakeFoldoutOpen;
+        sceneFoldout.value = openSceneFoldout || cameraShakeFoldoutOpen || cgFoldoutOpen;
         dialogueNode.mainContainer.Add(sceneFoldout);
 
         //Special Actions

@@ -12,6 +12,8 @@ public class DialogueNodeData : BaseNodeData {
     public SerializableDictionary<string, FadeInListItemData> FadeInList = new SerializableDictionary<string, FadeInListItemData>();
     public List<string> FadeOutList = new List<string>();
     public Sprite Background;
+    public Sprite CGImage;
+    public bool HideCG;
     public bool StopMusic;
     public AudioClip Music;
     public AudioClip Sound;
