@@ -13,6 +13,8 @@ public class CharacterInfoSO : ScriptableObject {
     public string characterName;
     public AnimatedSprite characterPrefab;
     public Color color = new Color(0, 0, 0, 1.0f);
+    public Sprite customCursor;
+    public Sprite customCursorFrame;
 
     private void OnValidate() {
 #if UNITY_EDITOR
