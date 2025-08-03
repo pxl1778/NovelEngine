@@ -25,6 +25,8 @@ public class DialogueNodeData : BaseNodeData {
     public float ShakeDuration = 1;
     public List<ReactionListItemData> ReactionList = new List<ReactionListItemData>();
     public List<ActionListItemData> SpecialActionList  = new List<ActionListItemData>();
+    [SerializeReference]
+    public List<DialogueNodeProperty> PropertiesList = new List<DialogueNodeProperty>();
 }
 
 [Serializable]

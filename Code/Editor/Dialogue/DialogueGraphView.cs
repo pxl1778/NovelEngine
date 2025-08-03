@@ -9,11 +9,12 @@ using System;
 using System.Linq;
 using UnityEditor.Callbacks;
 using System.IO;
+using UnityEngine.EventSystems;
 
 [Serializable]
-public class DialogueGraphView : GraphView
-{
+public class DialogueGraphView : GraphView {
     private NodeSearchWindow _searchWindow;
+    private PropertySearchWindow _propertySearchWindow;
     private EditorWindow _editorWindow;
     private BlackboardField shortLineProperty;
     public List<BlackboardField> blackboardProperties = new List<BlackboardField>();
@@ -35,6 +36,7 @@ public class DialogueGraphView : GraphView
 
         GenerateEntryPointNode();
         AddSearchWindow();
+        AddPropertySearchWindow();
 
         graphViewChanged = OnGraphChange;
     }
@@ -127,6 +129,25 @@ public class DialogueGraphView : GraphView
         _searchWindow = ScriptableObject.CreateInstance<NodeSearchWindow>();
         _searchWindow.Init(_editorWindow, this);
         nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _searchWindow);
+    }
+
+    private void AddPropertySearchWindow() {
+        _propertySearchWindow = ScriptableObject.CreateInstance<PropertySearchWindow>();
+        _propertySearchWindow.Init(_editorWindow, this);
+    }
+
+    public void OpenPropertyWindow(DialogueNode node) {
+        // Open search window properly under the node
+        Vector2 nodePosition = node.GetPosition().position;
+        nodePosition.y += node.localBound.size.y + 20;
+        nodePosition.x += node.localBound.size.x / 2;
+        Vector2 windowPosition = contentViewContainer.localBound.position;
+        nodePosition *= scale;
+        nodePosition += windowPosition;
+        nodePosition.Set(Mathf.Floor(nodePosition.x), Mathf.Floor(nodePosition.y));
+
+        _propertySearchWindow.SetNode(node);
+        SearchWindow.Open(new SearchWindowContext(nodePosition + _editorWindow.position.position/*_editorWindow.position.position*/), _propertySearchWindow);
     }
 
     private Port GeneratePort(Node node, Direction portDirection, Port.Capacity capacity = Port.Capacity.Single) {

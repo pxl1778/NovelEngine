@@ -342,11 +342,21 @@ public class DialogueNode : BaseNode {
         var actionsList = new SpecialActionsList(dialogueNode, graphView);
         dialogueNode.mainContainer.Add(actionsList);
 
+        //Properties
+        dialogueNodeData.PropertiesList.ForEach((property) => {
+            if (property is ImageBoxProperty imageBoxProperty) { 
+                dialogueNode.mainContainer.Add(new ImageBoxFoldout(dialogueNode, graphView));
+            }
+        });
+
         dialogueNode.mainContainer.style.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
         dialogueNode.style.minWidth = defaultNodeSize.x;
         dialogueNode.RefreshExpandedState();
         dialogueNode.RefreshPorts();
         dialogueNode.SetPosition(new Rect(position, defaultNodeSize));
+
+        var addButton = new Button(() => OpenPropertyWindow(graphView, dialogueNode)) { text = "+" };
+        dialogueNode.mainContainer.Add(addButton);
 
         var GUIDLabel = new Label(dialogueNode.GUID);
         dialogueNode.mainContainer.Add(GUIDLabel);
@@ -416,6 +426,13 @@ public class DialogueNode : BaseNode {
         dialogueNode.outputContainer.Remove(generatedPort);
         dialogueNode.RefreshPorts();
         dialogueNode.RefreshExpandedState();
+    }
 
+    public static void OpenPropertyWindow(DialogueGraphView graphView, DialogueNode node) {
+        graphView.OpenPropertyWindow(node);
+    }
+
+    public void AddProperty(Foldout newProperty) {
+        mainContainer.Insert(mainContainer.childCount - 2, newProperty);
     }
 }

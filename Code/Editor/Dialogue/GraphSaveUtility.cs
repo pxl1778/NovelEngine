@@ -51,7 +51,8 @@ public class GraphSaveUtility
                     ExclaimTextBox = nodeData.ExclaimTextBox,
                     ScreenFadeIn = nodeData.ScreenFadeIn,
                     ScreenFadeOut = nodeData.ScreenFadeOut,
-                    SpecialActionList = nodeData.SpecialActionList
+                    SpecialActionList = nodeData.SpecialActionList,
+                    PropertiesList = nodeData.PropertiesList
                 });
             } else if (node is SceneNode) {
                 SceneNodeData nodeData = node.NodeData as SceneNodeData;
