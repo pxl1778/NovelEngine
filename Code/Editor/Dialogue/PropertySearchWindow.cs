@@ -25,8 +25,26 @@ public class PropertySearchWindow : ScriptableObject, ISearchWindowProvider {
             new SearchTreeGroupEntry(new GUIContent("Add Property"), 0)
         };
         if(_node.nodeData.PropertiesList.Where((property) => property is ImageBoxProperty).FirstOrDefault() == null) {
-            tree.Add(new SearchTreeEntry(new GUIContent("ImageBox")) {
+            tree.Add(new SearchTreeEntry(new GUIContent("Image Box")) {
                 userData = new ImageBoxProperty(),
+                level = 1
+            });
+        }
+        if (_node.nodeData.PropertiesList.Where((property) => property is FlipSpriteProperty).FirstOrDefault() == null) {
+            tree.Add(new SearchTreeEntry(new GUIContent("Flip Sprite")) {
+                userData = new FlipSpriteProperty(),
+                level = 1
+            });
+        }
+        if (_node.nodeData.PropertiesList.Where((property) => property is MoveSpriteProperty).FirstOrDefault() == null) {
+            tree.Add(new SearchTreeEntry(new GUIContent("Move Sprite")) {
+                userData = new MoveSpriteProperty(),
+                level = 1
+            });
+        }
+        if (_node.nodeData.PropertiesList.Where((property) => property is OrderSpriteProperty).FirstOrDefault() == null) {
+            tree.Add(new SearchTreeEntry(new GUIContent("Order Sprite")) {
+                userData = new OrderSpriteProperty(),
                 level = 1
             });
         }
@@ -39,12 +57,25 @@ public class PropertySearchWindow : ScriptableObject, ISearchWindowProvider {
             saveUtility.SaveGraph();
             return false;
         }
-        var worldMousePosition = _window.rootVisualElement.ChangeCoordinatesTo(_window.rootVisualElement.parent, context.screenMousePosition - _window.position.position);
-        var localMousePosition = _graphView.contentViewContainer.WorldToLocal(worldMousePosition);
         switch (SearchTreeEntry.userData) {
             case ImageBoxProperty:
                 Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNewImageBox:" + _node.GUID);
                 _node.AddProperty(new ImageBoxFoldout(_node, _graphView));
+                EditorUtility.SetDirty(_graphView.containerCache);
+                return true;
+            case FlipSpriteProperty:
+                Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNewFlipSpriteProperty:" + _node.GUID);
+                _node.AddProperty(new FlipFoldout(_node, _graphView));
+                EditorUtility.SetDirty(_graphView.containerCache);
+                return true;
+            case MoveSpriteProperty:
+                Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNewMoveSpriteProperty:" + _node.GUID);
+                _node.AddProperty(new MoveFoldout(_node, _graphView));
+                EditorUtility.SetDirty(_graphView.containerCache);
+                return true;
+            case OrderSpriteProperty:
+                Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNewOrderSpriteProperty:" + _node.GUID);
+                _node.AddProperty(new OrderFoldout(_node, _graphView));
                 EditorUtility.SetDirty(_graphView.containerCache);
                 return true;
             default:

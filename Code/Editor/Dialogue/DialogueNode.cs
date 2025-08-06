@@ -344,8 +344,17 @@ public class DialogueNode : BaseNode {
 
         //Properties
         dialogueNodeData.PropertiesList.ForEach((property) => {
-            if (property is ImageBoxProperty imageBoxProperty) { 
-                dialogueNode.mainContainer.Add(new ImageBoxFoldout(dialogueNode, graphView));
+            if (property is ImageBoxProperty imageBoxProperty) {
+                dialogueNode.mainContainer.Add(new ImageBoxFoldout(dialogueNode, graphView, imageBoxProperty));
+            }
+            if (property is FlipSpriteProperty flipSpriteProperty) {
+                dialogueNode.mainContainer.Add(new FlipFoldout(dialogueNode, graphView, flipSpriteProperty));
+            }
+            if (property is MoveSpriteProperty moveSpriteProperty) {
+                dialogueNode.mainContainer.Add(new MoveFoldout(dialogueNode, graphView, moveSpriteProperty));
+            }
+            if (property is OrderSpriteProperty orderSpriteProperty) {
+                dialogueNode.mainContainer.Add(new OrderFoldout(dialogueNode, graphView, orderSpriteProperty));
             }
         });
 
