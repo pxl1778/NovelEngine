@@ -40,7 +40,6 @@ public class FlipFoldout : Foldout {
         var addButton = new Button(() => { AddItem(dialogueNode, graphView, property); }) { text = "+" };
         Insert(0, addButton);
 
-        style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
         style.borderTopWidth = 1;
         style.borderTopColor = new Color(0, 0, 0, 1);
         style.borderBottomWidth = 1;
@@ -136,7 +135,6 @@ public class MoveFoldout : Foldout {
         var addButton = new Button(() => { AddItem(dialogueNode, graphView, property); }) { text = "+" };
         Insert(0, addButton);
 
-        style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
         style.borderTopWidth = 1;
         style.borderTopColor = new Color(0, 0, 0, 1);
         style.borderBottomWidth = 1;
@@ -241,7 +239,6 @@ public class OrderFoldout : Foldout {
         var addButton = new Button(() => { AddItem(dialogueNode, graphView, property); }) { text = "+" };
         Insert(0, addButton);
 
-        style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
         style.borderTopWidth = 1;
         style.borderTopColor = new Color(0, 0, 0, 1);
         style.borderBottomWidth = 1;

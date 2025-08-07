@@ -16,7 +16,6 @@ public class ImageBoxFoldout : Foldout {
         this.graphView = graphView;
         text = "Image Box";
 
-        style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
         style.borderTopWidth = 1;
         style.borderTopColor = new Color(0, 0, 0, 1);
 

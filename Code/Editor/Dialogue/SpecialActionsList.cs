@@ -18,8 +18,6 @@ public class SpecialActionsList : Foldout {
         var addButton = new Button(() => AddItem(dialogueNode)) { text = "+" };
         Add(addButton);
 
-        style.backgroundColor = new Color(0.3f, 0.3f, 0.3f, 1);
-
         DialogueNodeData nodeData = dialogueNode.NodeData as DialogueNodeData;
         if (nodeData.SpecialActionList != null && nodeData.SpecialActionList.Count > 0) {
             for (int i = 0; i < nodeData.SpecialActionList.Count; i++) {
