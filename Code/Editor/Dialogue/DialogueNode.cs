@@ -120,16 +120,16 @@ public class DialogueNode : BaseNode {
         dialogueNode.mainContainer.Add(nameplateField);
         nameplateField.MarkDirtyRepaint();
 
-        //ExclaimTextBox
-        var exclaimCheckbox = new Toggle("Shouting Textbox");
-        exclaimCheckbox.RegisterValueChangedCallback(evt => {
-            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoExclaim:" + dialogueNode.GUID);
-            dialogueNodeData.ExclaimTextBox = evt.newValue;
+        //No Talking Checkbox
+        var noTalkingCheckbox = new Toggle("No Talking Animation");
+        noTalkingCheckbox.RegisterValueChangedCallback(evt => {
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoNoTalking:" + dialogueNode.GUID);
+            dialogueNodeData.NoTalking = evt.newValue;
             EditorUtility.SetDirty(graphView.containerCache);
         });
-        dialogueNode.mainContainer.Add(exclaimCheckbox);
-        exclaimCheckbox.SetValueWithoutNotify(dialogueNodeData.ExclaimTextBox);
-        exclaimCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
+        dialogueNode.mainContainer.Add(noTalkingCheckbox);
+        noTalkingCheckbox.SetValueWithoutNotify(dialogueNodeData.NoTalking);
+        noTalkingCheckbox.Children().Where(x => !(x is Label)).FirstOrDefault().style.flexDirection = FlexDirection.RowReverse;
 
         var characterFoldout = new Foldout();
         characterFoldout.text = "Characters";

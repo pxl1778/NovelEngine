@@ -12,7 +12,7 @@ public class DialogueObject
     public string background;
     public string music;
     public string sound;
-    public string exclaimTextBox;
+    public string noTalking;
     public string screenFadeIn;
     public string screenFadeOut;
     public string specialActions;

@@ -48,7 +48,7 @@ public class GraphSaveUtility
                     StopMusic = nodeData.StopMusic,
                     Music = nodeData.Music,
                     Sound = nodeData.Sound,
-                    ExclaimTextBox = nodeData.ExclaimTextBox,
+                    NoTalking = nodeData.NoTalking,
                     ScreenFadeIn = nodeData.ScreenFadeIn,
                     ScreenFadeOut = nodeData.ScreenFadeOut,
                     SpecialActionList = nodeData.SpecialActionList,

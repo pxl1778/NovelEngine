@@ -17,7 +17,7 @@ public class DialogueNodeData : BaseNodeData {
     public bool StopMusic;
     public AudioClip Music;
     public AudioClip Sound;
-    public bool ExclaimTextBox;
+    public bool NoTalking;
     public bool ScreenFadeIn;
     public bool ScreenFadeOut;
     public bool CameraShake;
