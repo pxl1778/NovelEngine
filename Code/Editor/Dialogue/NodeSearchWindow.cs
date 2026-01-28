@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor.Experimental.GraphView;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider {
@@ -19,6 +20,10 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider {
             new SearchTreeGroupEntry(new GUIContent("Create Elements"), 0),
             new SearchTreeEntry(new GUIContent("Dialogue Node")){
                 userData = new DialogueNode(),
+                level = 1
+            },
+            new SearchTreeEntry(new GUIContent("Dialogue Nodes...")){
+                userData = "MultiNode",
                 level = 1
             },
             new SearchTreeEntry(new GUIContent("Scene Node")){
@@ -84,8 +89,81 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider {
                 _graphView.CreateCommentNode(localMousePosition);
                 EditorUtility.SetDirty(_graphView.containerCache);
                 return true;
+            case "MultiNode":
+                CreateMultipleNodesWindow.ShowWindow(this, localMousePosition);
+                return true;
             default:
                 return false;
+        }
+    }
+
+    public void CreateMultipleNodes(int amount, Vector2 localMousePosition) {
+        Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNewMulti");
+        DialogueNode prevNode = null;
+        for(int i=0; i<amount; i++) {
+            var position = localMousePosition + new Vector2(i * 280, 0);
+            DialogueNode node = _graphView.CreateDialogueNode("Dialogue Node", position);
+            if(prevNode != null) {
+                // get first output port from previous node and input port from current node
+                Port outputPort = prevNode.outputContainer.childCount > 0 ? prevNode.outputContainer[0] as Port : null;
+                Port inputPort = node.inputContainer.childCount > 0 ? node.inputContainer[0] as Port : null;
+
+                if (outputPort != null && inputPort != null) {
+                    // create the edge and connect ports
+                    var edge = new Edge {
+                        output = outputPort,
+                        input = inputPort
+                    };
+                    outputPort.Connect(edge);
+                    inputPort.Connect(edge);
+
+                    // give the edge a unique id and add it to the graph view
+                    edge.viewDataKey = Guid.NewGuid().ToString();
+                    _graphView.AddElement(edge);
+
+                    _graphView.containerCache.NodeLinks.Add(new NodeLinkData {
+                        BaseNodeGuid = ((BaseNode)outputPort.node).GUID,
+                        PortName = outputPort.portName,
+                        Guid = edge.viewDataKey,
+                        TargetNodeGuid = ((BaseNode)inputPort.node).GUID
+                    });
+                }
+            }
+            prevNode = node;
+        }
+        EditorUtility.SetDirty(_graphView.containerCache);
+    }
+}
+
+public class CreateMultipleNodesWindow : EditorWindow {
+    int amount = 3;
+    NodeSearchWindow owner;
+    UnityEngine.Vector2 localMousePosition;
+
+    public static void ShowWindow(NodeSearchWindow owner, Vector2 localMousePosition) {
+        var w = CreateInstance<CreateMultipleNodesWindow>();
+        w.titleContent = new GUIContent("Create Multiple Nodes");
+        w.owner = owner;
+        w.localMousePosition = localMousePosition;
+        w.position = new Rect(Screen.width / 2f, Screen.height / 2f, 220, 80);
+        w.ShowUtility();
+    }
+
+    void OnGUI() {
+        EditorGUILayout.LabelField("Number of nodes to create:", EditorStyles.boldLabel);
+        amount = EditorGUILayout.IntField(amount);
+        if (amount < 1) amount = 1;
+
+        EditorGUILayout.Space();
+
+        using (new EditorGUILayout.HorizontalScope()) {
+            if (GUILayout.Button("Create")) {
+                owner?.CreateMultipleNodes(amount, localMousePosition);
+                Close();
+            }
+            if (GUILayout.Button("Cancel")) {
+                Close();
+            }
         }
     }
 }
