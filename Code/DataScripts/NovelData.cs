@@ -15,7 +15,7 @@ public class NovelData : ScriptableObject {
     private List<string> ChoiceKeys = new List<string>();
     [SerializeField]
     private DialogueContainer firstScene;
-    public DialogueContainer FirstScene { get; }
+    public DialogueContainer FirstScene { get { return firstScene; } }
     public static string NARRATOR = "Narrator";
     private static string assetName => nameof(NovelData) + "SO";
     private static NovelData s_instance;
