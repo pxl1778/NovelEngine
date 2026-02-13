@@ -7,6 +7,7 @@ using UnityEditor;
 public class DialogueContainer : ScriptableObject {
     [field: SerializeField] public string Id { get; private set; }
     [field: SerializeField] public string LoadPath { get; private set; }
+    [field: SerializeField] public Sprite Thumbnail { get; set; }
 
     public List<NodeLinkData> NodeLinks = new List<NodeLinkData>();
     public List<DialogueNodeData> DialogueNodeDatas = new List<DialogueNodeData>();
