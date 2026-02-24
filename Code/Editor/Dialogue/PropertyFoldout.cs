@@ -92,6 +92,7 @@ public class FlipFoldoutItem : VisualElement {
         }
 
         var deleteButton = new Button(() => {
+            Selection.activeObject = null;
             Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoFlipSpriteRemove:" + dialogueNode.GUID);
             nodeData.PropertiesList.Remove(property);
             property.characterIds.Remove(characterDropdown.value);
@@ -197,6 +198,7 @@ public class MoveFoldoutItem : VisualElement {
         Add(positionField);
 
         var deleteButton = new Button(() => {
+            Selection.activeObject = null;
             Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoMoveSpriteRemove:" + dialogueNode.GUID);
             property.characterPositions.Remove(characterDropdown.value);
             EditorUtility.SetDirty(graphView.containerCache);
@@ -302,6 +304,7 @@ public class OrderFoldoutItem : VisualElement {
         Add(orderDropdown);
 
         var deleteButton = new Button(() => {
+            Selection.activeObject = null;
             Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoOrderSpriteRemove:" + dialogueNode.GUID);
             property.characterOrders.Remove(characterDropdown.value);
             EditorUtility.SetDirty(graphView.containerCache);
@@ -314,5 +317,49 @@ public class OrderFoldoutItem : VisualElement {
 
     public void UpdateCharacters(List<string> characters) {
         characterDropdown.choices = characters;
+    }
+}
+
+/// <summary>
+/// Foldout to change the style of the dialogue box for a dialogue node.
+/// </summary>
+public class DialogueBoxStyleFoldout : Foldout {
+    public DialogueGraphView graphView;
+    public DialogueBoxStyleFoldout(DialogueNode dialogueNode, DialogueGraphView graphView, DialogueBoxStyleProperty property = null) {
+        this.graphView = graphView;
+        text = "Dialogue Box Style";
+        DialogueNodeData nodeData = dialogueNode.NodeData as DialogueNodeData;
+        // Add first element
+        if (property == null) {
+            property = new DialogueBoxStyleProperty();
+            nodeData.PropertiesList.Add(property);
+        }
+        var styleDropdown = new DropdownField("Style", Enum.GetNames(typeof(DialogueBoxStyle)).ToList(), 0);
+        styleDropdown.labelElement.style.minWidth = 20;
+        styleDropdown.RegisterValueChangedCallback(evt => {
+            //Reset dropdown
+            object actionType;
+            if (System.Enum.TryParse(typeof(DialogueBoxStyle), evt.newValue, out actionType)) {
+                Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoDialogueBoxStyle:" + dialogueNode.GUID);
+                property.dialogueBoxStyle = (DialogueBoxStyle)actionType;
+                EditorUtility.SetDirty(graphView.containerCache);
+            }
+        });
+        styleDropdown.SetValueWithoutNotify(property.dialogueBoxStyle.ToString());
+        Add(styleDropdown);
+        var deleteButton = new Button(() => {
+            Selection.activeObject = null;
+            Undo.RegisterCompleteObjectUndo(graphView.containerCache, "NodeUndoDialogueBoxStyleRemove:" + dialogueNode.GUID);
+            nodeData.PropertiesList.Remove(property);
+            EditorUtility.SetDirty(graphView.containerCache);
+            parent.contentContainer.Remove(this);
+        }) { text = "X" };
+        deleteButton.style.width = 20;
+        styleDropdown.Add(deleteButton);
+
+        style.borderTopWidth = 1;
+        style.borderTopColor = new Color(0, 0, 0, 1);
+        style.borderBottomWidth = 1;
+        style.borderBottomColor = new Color(0, 0, 0, 1);
     }
 }

@@ -356,6 +356,9 @@ public class DialogueNode : BaseNode {
             if (property is OrderSpriteProperty orderSpriteProperty) {
                 dialogueNode.mainContainer.Add(new OrderFoldout(dialogueNode, graphView, orderSpriteProperty));
             }
+            if (property is DialogueBoxStyleProperty dialogueBoxStyleProperty) {
+                dialogueNode.mainContainer.Add(new DialogueBoxStyleFoldout(dialogueNode, graphView, dialogueBoxStyleProperty));
+            }
         });
 
         dialogueNode.mainContainer.style.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);

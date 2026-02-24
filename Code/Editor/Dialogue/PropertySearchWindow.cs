@@ -48,6 +48,12 @@ public class PropertySearchWindow : ScriptableObject, ISearchWindowProvider {
                 level = 1
             });
         }
+        if (_node.nodeData.PropertiesList.Where((property) => property is DialogueBoxStyleProperty).FirstOrDefault() == null) {
+            tree.Add(new SearchTreeEntry(new GUIContent("Change Dialogue Box Style")) {
+                userData = new DialogueBoxStyleProperty(),
+                level = 1
+            });
+        }
         return tree;
     }
 
@@ -76,6 +82,11 @@ public class PropertySearchWindow : ScriptableObject, ISearchWindowProvider {
             case OrderSpriteProperty:
                 Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNewOrderSpriteProperty:" + _node.GUID);
                 _node.AddProperty(new OrderFoldout(_node, _graphView));
+                EditorUtility.SetDirty(_graphView.containerCache);
+                return true;
+            case DialogueBoxStyleProperty:
+                Undo.RegisterCompleteObjectUndo(_graphView.containerCache, "NodeUndoAddNewDialogueBoxStyleProperty:" + _node.GUID);
+                _node.AddProperty(new DialogueBoxStyleFoldout(_node, _graphView));
                 EditorUtility.SetDirty(_graphView.containerCache);
                 return true;
             default:

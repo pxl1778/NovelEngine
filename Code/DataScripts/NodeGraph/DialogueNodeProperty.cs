@@ -32,3 +32,8 @@ public enum SortOrder { MOVE_TO_FRONT, MOVE_TO_BACK };
 public class OrderSpriteProperty : DialogueNodeProperty {
     public SerializableDictionary<string, SortOrder> characterOrders = new SerializableDictionary<string, SortOrder>();
 }
+
+[Serializable]
+public class DialogueBoxStyleProperty : DialogueNodeProperty {
+    public DialogueBoxStyle dialogueBoxStyle = DialogueBoxStyle.Normal;
+}
