@@ -16,6 +16,9 @@ public class NovelData : ScriptableObject {
     [SerializeField]
     private DialogueContainer firstScene;
     public DialogueContainer FirstScene { get { return firstScene; } }
+    [SerializeField]
+    private List<DialogueContainer> orderedScenes = new List<DialogueContainer>();
+    public List<DialogueContainer> OrderedScenes { get { return orderedScenes; } }
     public static string NARRATOR = "Narrator";
     private static string assetName => nameof(NovelData) + "SO";
     private static NovelData s_instance;
